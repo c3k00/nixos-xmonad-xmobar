@@ -1,0 +1,42 @@
+Config { font = "JetBrainsMono 10"
+       , additionalFonts = ["JetBrainsMono 10"]
+       , borderColor = "black"
+       , border = FullB
+       , bgColor = "#05161A"
+       , fgColor = "#0F969C"
+       , alpha = 128
+       , position = Top
+       , textOffset = -1
+       , iconOffset = -1
+       , lowerOnStart = True
+       , pickBroadest = False
+       , persistent = True
+       , hideOnStart = False
+       , iconRoot = "."
+       , allDesktops = True
+       , overrideRedirect = True
+       , textOutputFormat = Ansi
+       , commands = [ Run Weather "UMMS" ["-t","<station>: <tempC>°C",
+                                          "-L","18","-H","25",
+                                          "--normal","green",
+                                          "--high","red",
+                                          "--low","lightblue"] 36000
+                    , Run Network "lo" ["-L","0","-H","32",
+                                          "--normal","green","--high","red"] 10
+                    , Run Network "enp0s3" ["-L","0","-H","32",
+                                          "--normal","green","--high","red"] 10
+                    , Run Cpu ["-L","3","-H","50",
+                               "--normal","green","--high","red"] 10
+                    , Run Memory ["-t","Mem: <usedratio>%"] 10
+                    , Run Swap [] 10
+                    , Run Com "uname" ["-s","-r"] "" 36000
+                    , Run Date "%b %d %Y %H:%M" "date" 10
+                    , Run BatteryP ["BAT0"] ["-t", "<acstatus><watts> (<left>%)"] 360
+                    ]
+
+                    
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = "%cpu% | <box>%memory% * %swap%</box> | %enp0s3% }\
+                    \{ <fc=#ee9a00><fn=1>%date%</fn></fc>| %BatteryP% | %UMMS% | %uname%"
+       }
