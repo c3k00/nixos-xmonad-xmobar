@@ -1,10 +1,10 @@
 Config { font = "JetBrainsMono 10"
        , additionalFonts = ["JetBrainsMono 10"]
-       , borderColor = "black"
+       , borderColor = "#black"
        , border = FullB
        , bgColor = "#05161A"
        , fgColor = "#0F969C"
-       , alpha = 128
+       , alpha = 256
        , position = Top
        , textOffset = -1
        , iconOffset = -1
@@ -16,27 +16,32 @@ Config { font = "JetBrainsMono 10"
        , allDesktops = True
        , overrideRedirect = True
        , textOutputFormat = Ansi
-       , commands = [ Run Weather "UMMS" ["-t","<station>: <tempC>°C",
-                                          "-L","18","-H","25",
-                                          "--normal","green",
-                                          "--high","red",
-                                          "--low","lightblue"] 36000
-                    , Run Network "lo" ["-L","0","-H","32",
-                                          "--normal","green","--high","red"] 10
-                    , Run Network "enp0s3" ["-L","0","-H","32",
-                                          "--normal","green","--high","red"] 10
-                    , Run Cpu ["-L","3","-H","50",
-                               "--normal","green","--high","red"] 10
-                    , Run Memory ["-t","Mem: <usedratio>%"] 10
-                    , Run Swap [] 10
-                    , Run Com "uname" ["-s","-r"] "" 36000
-                    , Run Date "%b %d %Y %H:%M" "date" 10
-                    , Run BatteryP ["BAT0"] ["-t", "<acstatus><watts> (<left>%)"] 360
-                    ]
+       , commands = [
+  		Run Com "uname" ["-s","-r"] "kernel" 0
+       		, Run Weather "UMMS"
+			[ "--template", "Weather: <tempC>°C"
+                        , "-L", "0"
+                        , "-H", "25"
+                        ] 36000
+		, Run BatteryP ["BAT0"]
+			["-t", "Batt: <acstatus><left>% / <timeleft>"
+               		, "-L", "10", "-H", "80"
+               		, "-l", "red"
+               		, "--", "-O", "↑", "-o", "↓", "-i", "="
+               		] 10
+	 	, Run DiskU [("/", "<free>"), ("sdb2", "<usedbar>")]
+        		["-L", "20", "-H", "50", "-m", "1", "-p", "3"] 20
+                , Run Cpu
+                        [ "-t", "CPU: <total>%" 
+			, "-L", "3"
+                        , "-H", "50"
+                        , "--high"  , "red"
+                        ] 10
+  		, Run Kbd [("us", "US"), ("ru", "RU")]		
+                , Run Memory ["--template", "RAM: <usedratio>%"] 10
+                , Run Date "%a %Y-%m-%d %H:%M" "date" 10
+                , Run XMonadLog
+        ]
 
-                    
-       , sepChar = "%"
-       , alignSep = "}{"
-       , template = "%cpu% | <box>%memory% * %swap%</box> | %enp0s3% }\
-                    \{ <fc=#ee9a00><fn=1>%date%</fn></fc>| %BatteryP% | %UMMS% | %uname%"
+       , template = "%XMonadLog% }{  <box type=Bottom width=2 color=#cc241d><fc=#cc241d> %kernel%</fc></box>   <box type=Bottom width=2 color=#98971a><fc=#98971a> %cpu%</fc></box>   <box type=Bottom width=2 color=#d79921><fc=#d79921> %memory%</fc></box>   <box type=Bottom width=2 color=#458588><fc=#458588> %battery%</fc></box>   <box type=Bottom width=2 color=#b16286><fc=#b16286> Root: %disku% free</fc></box>   <box type=Bottom width=2 color=#689d6a><fc=#689d6a>Layout: %kbd%</fc></box>   <box type=Bottom width=2 color=#d65d0e><fc=#d65d0e> %UMMS%</fc></box>   <box type=Bottom width=2 color=#7fa2ac><fc=#7fa2ac> %date%</fc></box>"
        }
