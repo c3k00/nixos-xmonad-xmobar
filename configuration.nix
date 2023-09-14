@@ -93,7 +93,7 @@
   environment.systemPackages = with pkgs; [
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #  wget
-	git
+	gitFull
 	alacritty
 	ranger
 	neofetch
@@ -104,7 +104,8 @@
 	brightnessctl
 	opera
 	rofi
-	xfce.thunar
+  pcmanfm
+  gotop
 	feh
 	haskellPackages.xmobar
 	arandr
